@@ -6,6 +6,7 @@ enum Wert {
     Kommazahl(f32),
 }
 
+#[allow(dead_code)]
 enum Operation {
     Plus,
     Minus,
