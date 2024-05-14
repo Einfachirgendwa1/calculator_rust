@@ -89,11 +89,17 @@ impl<A: Lösbar, B: Lösbar> Lösbar for Rechnung<A, B> {
 }
 
 fn main() {
-    let rechnung = Rechnung {
+    let unter_rechnung = Rechnung {
         links: Wert::Ganzzahl(1),
         operation: Operation::Plus,
         rechts: Wert::Ganzzahl(1),
     };
 
-    println!("1 + 1 = {:?}", rechnung.lösung())
+    let rechnung = Rechnung {
+        links: unter_rechnung,
+        operation: Operation::Geteilt,
+        rechts: Wert::Ganzzahl(4),
+    };
+
+    println!("(1 + 1) / 4 = {:?}", rechnung.lösung())
 }
