@@ -1,9 +1,17 @@
-use std::ops::{Add, Div, Mul, Sub};
+trait Get {
+    fn get(self) -> f32;
+}
 
-#[derive(Debug)]
-enum Wert {
-    Ganzzahl(i32),
-    Kommazahl(f32),
+impl Get for f32 {
+    fn get(self) -> f32 {
+        self
+    }
+}
+
+impl Get for i32 {
+    fn get(self) -> f32 {
+        self as f32
+    }
 }
 
 #[allow(dead_code)]
@@ -14,93 +22,34 @@ enum Operation {
     Geteilt,
 }
 
-trait Lösbar {
-    fn lösung(self: Self) -> Wert;
+struct Rechnung<A: Get, B: Get> {
+    l: A,
+    r: B,
+    o: Operation,
 }
 
-impl Lösbar for Wert {
-    fn lösung(self: Self) -> Wert {
-        self
-    }
-}
-
-impl Add<Wert> for Wert {
-    type Output = Wert;
-    fn add(self, rhs: Wert) -> Self::Output {
-        match (self, rhs) {
-            (Wert::Ganzzahl(x), Wert::Ganzzahl(y)) => Wert::Ganzzahl(x + y),
-            (Wert::Kommazahl(x), Wert::Ganzzahl(y)) => Wert::Kommazahl(x + y as f32),
-            (Wert::Ganzzahl(x), Wert::Kommazahl(y)) => Wert::Kommazahl(x as f32 + y),
-            (Wert::Kommazahl(x), Wert::Kommazahl(y)) => Wert::Kommazahl(x + y),
-        }
-    }
-}
-
-impl Sub<Wert> for Wert {
-    type Output = Wert;
-    fn sub(self, rhs: Wert) -> Self::Output {
-        match (self, rhs) {
-            (Wert::Ganzzahl(x), Wert::Ganzzahl(y)) => Wert::Ganzzahl(x - y),
-            (Wert::Kommazahl(x), Wert::Ganzzahl(y)) => Wert::Kommazahl(x - y as f32),
-            (Wert::Ganzzahl(x), Wert::Kommazahl(y)) => Wert::Kommazahl(x as f32 - y),
-            (Wert::Kommazahl(x), Wert::Kommazahl(y)) => Wert::Kommazahl(x - y),
-        }
-    }
-}
-
-impl Mul<Wert> for Wert {
-    type Output = Wert;
-    fn mul(self, rhs: Wert) -> Self::Output {
-        match (self, rhs) {
-            (Wert::Ganzzahl(x), Wert::Ganzzahl(y)) => Wert::Ganzzahl(x * y),
-            (Wert::Kommazahl(x), Wert::Ganzzahl(y)) => Wert::Kommazahl(x * y as f32),
-            (Wert::Ganzzahl(x), Wert::Kommazahl(y)) => Wert::Kommazahl(x as f32 * y),
-            (Wert::Kommazahl(x), Wert::Kommazahl(y)) => Wert::Kommazahl(x * y),
-        }
-    }
-}
-
-impl Div<Wert> for Wert {
-    type Output = Wert;
-    fn div(self, rhs: Wert) -> Self::Output {
-        match (self, rhs) {
-            (Wert::Ganzzahl(x), Wert::Ganzzahl(y)) => Wert::Kommazahl(x as f32 / y as f32),
-            (Wert::Kommazahl(x), Wert::Ganzzahl(y)) => Wert::Kommazahl(x / y as f32),
-            (Wert::Ganzzahl(x), Wert::Kommazahl(y)) => Wert::Kommazahl(x as f32 / y),
-            (Wert::Kommazahl(x), Wert::Kommazahl(y)) => Wert::Kommazahl(x / y),
-        }
-    }
-}
-
-struct Rechnung<A: Lösbar, B: Lösbar> {
-    links: A,
-    rechts: B,
-    operation: Operation,
-}
-
-impl<A: Lösbar, B: Lösbar> Lösbar for Rechnung<A, B> {
-    fn lösung(self: Self) -> Wert {
-        match self.operation {
-            Operation::Plus => self.links.lösung() + self.rechts.lösung(),
-            Operation::Minus => self.links.lösung() - self.rechts.lösung(),
-            Operation::Mal => self.links.lösung() * self.rechts.lösung(),
-            Operation::Geteilt => self.links.lösung() / self.rechts.lösung(),
+impl<A: Get, B: Get> Get for Rechnung<A, B> {
+    fn get(self) -> f32 {
+        let (l, r) = (self.l.get(), self.r.get());
+        match self.o {
+            Operation::Plus => l + r,
+            Operation::Minus => l - r,
+            Operation::Mal => l * r,
+            Operation::Geteilt => l / r,
         }
     }
 }
 
 fn main() {
-    let unter_rechnung = Rechnung {
-        links: Wert::Ganzzahl(1),
-        operation: Operation::Plus,
-        rechts: Wert::Ganzzahl(1),
-    };
-
     let rechnung = Rechnung {
-        links: unter_rechnung,
-        operation: Operation::Geteilt,
-        rechts: Wert::Ganzzahl(4),
+        l: 1,
+        r: Rechnung {
+            l: 10,
+            r: 2,
+            o: Operation::Mal,
+        },
+        o: Operation::Geteilt,
     };
 
-    println!("(1 + 1) / 4 = {:?}", rechnung.lösung())
+    println!("1 / (10 * 2) = {}", rechnung.get());
 }
