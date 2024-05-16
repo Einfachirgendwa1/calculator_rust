@@ -77,6 +77,10 @@ fn solve(rechnung: &str) -> Result<f32, String> {
 
         let mut iter = rechnung.chars();
         while let Some(buchstabe) = iter.next() {
+            if buchstabe.is_ascii_whitespace() {
+                continue;
+            }
+
             if match buchstabe {
                 '+' => Some(tokens.push(Token::Operation(Operation::Plus))),
                 '-' => Some(tokens.push(Token::Operation(Operation::Minus))),
