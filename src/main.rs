@@ -106,7 +106,8 @@ fn solve(rechnung: &str) -> Result<f32, String> {
 
                     num.push(buchstabe);
                 }
-                tokens.push(Token::Literal(num.parse().unwrap()))
+                tokens.push(Token::Literal(num.parse().unwrap()));
+                continue;
             }
 
             return Err(format!(
