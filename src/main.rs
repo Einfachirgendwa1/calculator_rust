@@ -51,7 +51,10 @@ fn main() {
         let mut input = String::new();
         print!("> ");
         stdout().flush().unwrap();
-        if stdin().read_line(&mut input).is_err() {
+        if stdin().read_line(&mut input).is_err() || {
+            input = input.trim().to_string();
+            input.is_empty()
+        } {
             println!();
             exit(0);
         }
