@@ -20,6 +20,7 @@ impl Get for i32 {
 }
 
 #[allow(dead_code)]
+#[derive(Debug)]
 enum Operation {
     Plus,
     Minus,
@@ -62,6 +63,8 @@ fn main() {
     }
 }
 
+#[allow(dead_code)]
+#[derive(Debug)]
 enum Token {
     Literal(f32),
     Operation(Operation),
@@ -108,5 +111,7 @@ fn solve(rechnung: &str) -> Result<f32, String> {
         Err(message) => return Err(message),
     };
 
-    Err("Variablen noch nicht implementiert".to_string())
+    dbg!(tokens);
+
+    Err("Noch nicht implementiert".to_string())
 }
