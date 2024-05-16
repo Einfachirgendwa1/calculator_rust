@@ -78,7 +78,7 @@ fn solve(rechnung: &str) -> Result<f32, String> {
         let result: Result<Vec<Token>, String>;
         let mut tokens: Vec<Token> = Vec::new();
 
-        let mut iter = rechnung.chars();
+        let mut iter = rechnung.chars().peekable();
         while let Some(buchstabe) = iter.next() {
             if buchstabe.is_ascii_whitespace() {
                 continue;
@@ -98,13 +98,13 @@ fn solve(rechnung: &str) -> Result<f32, String> {
 
             if buchstabe.is_digit(10) {
                 let mut num = String::from(buchstabe);
-                while let Some(buchstabe) = iter.next() {
-                    // https://github.com/rust-lang/rust/issues/53667
+                while let Some(buchstabe) = iter.peek() {
                     if !buchstabe.is_digit(10) {
-                        continue;
+                        break;
                     }
 
-                    num.push(buchstabe);
+                    num.push(*buchstabe);
+                    iter.next();
                 }
                 tokens.push(Token::Literal(num.parse().unwrap()));
                 continue;
