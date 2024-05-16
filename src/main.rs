@@ -106,7 +106,10 @@ fn solve(rechnung: &str) -> Result<f32, String> {
                 tokens.push(Token::Literal(num.parse().unwrap()))
             }
 
-            return Err("Variablen noch nicht implementiert".to_string());
+            return Err(format!(
+                "Variablen noch nicht implementiert (wegen Buchstabe '{}')",
+                buchstabe
+            ));
         }
 
         result = Ok(tokens);
