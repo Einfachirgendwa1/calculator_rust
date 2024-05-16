@@ -97,7 +97,7 @@ fn solve(rechnung: &str) -> Result<f32, String> {
             }
 
             if buchstabe.is_digit(10) {
-                let mut num = String::new();
+                let mut num = String::from(buchstabe);
                 while let Some(buchstabe) = iter.next() {
                     // https://github.com/rust-lang/rust/issues/53667
                     if !buchstabe.is_digit(10) {
