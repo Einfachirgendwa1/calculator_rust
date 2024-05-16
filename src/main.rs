@@ -49,7 +49,7 @@ impl<A: Get, B: Get> Get for Rechnung<A, B> {
 fn main() {
     loop {
         let mut input = String::new();
-        println!("> ");
+        print!("> ");
         stdout().flush().unwrap();
         if stdin().read_line(&mut input).is_err() {
             println!();
@@ -101,6 +101,7 @@ fn solve(rechnung: &str) -> Result<f32, String> {
                 }
                 tokens.push(Token::Literal(num.parse().unwrap()))
             }
+
             return Err("Variablen noch nicht implementiert".to_string());
         }
 
